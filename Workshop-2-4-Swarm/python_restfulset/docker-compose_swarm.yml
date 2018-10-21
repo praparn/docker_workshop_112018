@@ -56,7 +56,7 @@ services:
       - "5000:5000"
 
   maindb:
-    image: labdocker/mysql:latest
+    image: labdocker/mariadb:latest
     container_name: maindb
     deploy:
       mode: replicated
