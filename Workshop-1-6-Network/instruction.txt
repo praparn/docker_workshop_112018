@@ -15,22 +15,24 @@ Part1: Reverse Proxy by DNS
 	--subnet=192.168.101.0/24 --ip-range=192.168.101.128/25 \
 	--gateway=192.168.101.5 --opt="com.docker.network.mtu"="9000" webinternal
 
+	*For Windows*: 
+	docker network create --driver bridge --subnet=192.168.100.0/24 --ip-range=192.168.100.128/25 --gateway=192.168.100.5 --opt="com.docker.network.mtu"="1500" webpublic
+	docker network create --driver bridge --subnet=192.168.101.0/24 --ip-range=192.168.101.128/25 --gateway=192.168.101.5 --opt="com.docker.network.mtu"="9000" webinternal
+
+
 5. Run container web1 & web2 with command:
 
-	docker container run -dt --name web1 --net webinternal \
-	--net-alias web1 labdocker/alpineweb:web1 node hello.js
+	docker container run -dt --name web1 --net webinternal --net-alias web1 labdocker/alpineweb:web1 node hello.js
 
-	docker container run -dt --name web2 --net webinternal \
-	--net-alias web2 labdocker/alpineweb:web2 node hello.js
+	docker container run -dt --name web2 --net webinternal --net-alias web2 labdocker/alpineweb:web2 node hello.js
 
 6. Run container nginx and attach network 
 
-	docker container run -dt --name nginx --net webinternal \
-	 -p 80:8080 labdocker/nginx:labnetwork
+	docker container run -dt --name nginx --net webinternal -p 80:8080 labdocker/nginx:labnetwork
 
 	docker network connect webpublic nginx
 
-7. Open url: http://<ip address of docker-machine>:80/nodejs
+7. Open url: http://127.0.0.1/nodejs
 
 8. Shell to nginx and test curl to nodejs with command below:
 	docker container exec -it nginx sh
@@ -43,19 +45,13 @@ Part1: Reverse Proxy by DNS
 	docker network rm webpublic webinternal
 
 ================================================================================
-Part2: Reverse Proxy by DNS with MACVLAN
+Part2: Reverse Proxy by DNS with MACVLAN (DEMO from Instructor)
+Note: This lab cannot operate via "Docker for Mac/Docker for Windows". If you need to join this lab. You need to install docker-machine over oracle virtualbox on MAC OS X
 ================================================================================
 1. Pull image nginx with command: 		
 	"docker image pull labdocker/nginx:labnetwork"
 
-2. Install TCPDUMP on labdocker by command: (Optional)
-	tce-load -wi netfilter-4.8.17-tinycore64.tcz
-	sudo cp -R /tmp/tce/optional/netfilter-4.8.17-tinycore64.tcz.md5.txt /tmp/tce/optional/netfilter-4.9.93-boot2docker.tcz.md5.txt
-	sudo cp -R /tmp/tce/optional/netfilter-4.8.17-tinycore64.tcz /tmp/tce/optional/netfilter-4.9.93-boot2docker.tcz
-	sudo cp -R /tmp/tcloop/netfilter-4.8.17-tinycore64/* /tmp/tcloop/netfilter-4.4.111-boot2docker/
-	tce-load -wi tcpdump
-
-3. Check and Locate Network Card by command:
+2. Check and Locate Network Card by command:
 	ifconfig / ip addr
 
 	Example: dockertoolbox (labdocker: eth1): Gateway: 192.168.99.1
@@ -89,14 +85,14 @@ Part2: Reverse Proxy by DNS with MACVLAN
 
 	---------------------------------------------------------------------------------------------
 
-2. Create Network for MACVLAN by command: (This example: will extract 192.168.99.193 - 192.168.99.206 for macvlan)
+3. Create Network for MACVLAN by command: (This example: will extract 192.168.99.193 - 192.168.99.206 for macvlan)
 	docker network create -d macvlan  \
 	--subnet=192.168.99.0/24  \
 	--ip-range=192.168.99.192/28 \
 	--gateway=192.168.99.1  \
     -o parent=eth1 macvlanlab
 
-3. Run container for web1, web2 and nginx by command:
+4. Run container for web1, web2 and nginx by command:
 	docker container run -dt --name web1 --net macvlanlab --ip 192.168.99.193 \
 	--net-alias web1  labdocker/alpineweb:web1 node hello.js
 	

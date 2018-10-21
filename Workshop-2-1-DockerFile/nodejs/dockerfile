@@ -1,9 +1,9 @@
 FROM labdocker/alpine:latest 
 MAINTAINER Praparn Lueangphoonlap (eva10409@gmail.com) 
 LABEL Description="NodeJS/NGINX Build Container" Version="1.0"
-ENV NODE_VERSION=v4.3.0 NPM_VERSION=2.14.12
+ENV NODE_VERSION=v8.11.4 NPM_VERSION=5.6.0
 RUN apk update && \
-    apk add nodejs
+    apk add nodejs nodejs-npm
 RUN mkdir /nodejs
 COPY hello.js /nodejs/
 WORKDIR /nodejs

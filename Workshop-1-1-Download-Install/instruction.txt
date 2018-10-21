@@ -1,0 +1,14 @@
+Link for download:
+1.See PDF document for detail to install
+2. Copy all workshop folder to specific location
+	2.1 For MAC: 
+2.After finished then when you avaliable please run below command: (This for Workshopt 1.2)
+    2.1 docker image pull labdocker/alpine:latest 				(This for Day1)
+	2.2 docker image pull labdocker/alpineweb:latest			(This for Day1)
+	2.3 docker image pull labdocker/cadvisor:latest 			(This for Day1)
+	2.4 docker image pull labdocker/ubuntu:latest				(This for Day1)
+    2.5 docker image pull labdocker/redis:latest				(This for Day2)
+    2.6 docker image pull labdocker/linenotify:bot_v1			(This for Day2)
+    2.7 docker image pull labdocker/cluster:webservicelite		(This for Day2)
+	2.8 docker image pull labdocker/mariadb:latest 				(This for Day2 and quite a big image may be take sometime or Do at home)
+	2.9 docker image pull labdocker/alpinepython:2.7-onbuild	(This for Day1-2 and quite a big image may be take sometime or Do at home)

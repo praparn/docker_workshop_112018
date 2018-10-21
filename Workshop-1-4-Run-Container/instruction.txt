@@ -1,12 +1,11 @@
 1. Interactive NODEJS
-	1.1 run docker on interactive mode with command 
+	1.1 run docker on interactive mode with command (Remark: For windows. Please make all command with the same line)
 
-	docker container run  -i -t --rm --name nodejs -p 3000:3000 \
-    labdocker/alpineweb:latest node hello.js
+	docker container run  -i -t --rm --name nodejs -p 3000:3000 labdocker/alpineweb:latest
 
 	*Result: ==> Server running at http://0.0.0.0:3000/
 
-	1.2 open browser with url: http://<ip address of docker>:3000
+	1.2 open browser with url: http://127.0.0.1:3000
 
 	1.3 open another session and press command: "docker container ps"
 	*Result: 
@@ -29,10 +28,9 @@ CONTAINER ID        IMAGE                        COMMAND             CREATED    
 3. Detach NODEJS
 	3.1 run docker on detach mode with command
 
-	docker container run -d -t --name nodejs -p 3000:3000 \
-	labdocker/alpineweb:latest node hello.js
+	docker container run -d -t --name nodejs -p 3000:3000 labdocker/alpineweb:latest
 
-	3.2 open browser with url: http://<ip address of docker>:3000
+	3.2 open browser with url: http://127.0.0.1:3000
 
 	3.3 access shell to container with command: "docker container exec -i -t nodejs sh"
 
@@ -51,10 +49,9 @@ e0790d46c800        labdocker/alpineweb:latest   "node hello.js"     6 seconds a
 
 	4.1 run docker on detach mode with command
 
-	docker container run  -d -t --name python -p 5000:5000 \
- 	labdocker/cluster:webservicelite
+	docker container run  -d -t --name python -p 5000:5000 labdocker/cluster:webservicelite
 
-	4.2 open browser with url: http://<ip address of docker>:5000
+	4.2 open browser with url: http://127.0.0.1:5000
 
 	4.3 access shell to container with command: "docker container exec -i -t python sh"
 

@@ -1,24 +1,37 @@
 For this workshop. We will demonstration about how to use volume on purpose of share storage and backup/restore
 ***************************************************************************************
 Before Start Lab:
-	1.  Please kindly operate sharefile on Manual_DockerToolbox_Create_ShareFile.pdf
-	2.  Generate your line token https://notify-bot.line.me
+	1.  Generate your line token https://notify-bot.line.me
 ***************************************************************************************
 
 Part 1: Host Path Debug Program
 ---------------------------------------------------------------------------------------------------------------
-1. Copy folder: "LINE_Notify" to "Share_DockerToolbox"
+1. Check folder "dockerworkshop" and configuration on docker for mac and docker for windows
+	*For MAC OS X*:
+		ls ~/dockerworkshop
+
+	*For Windows*:
+		dir d:\dockerworkshop
+
+		
 2. Pull image of container for operate by command: "docker image pull labdocker/alpine:latest"
 3. Run container with mapping volume by command:
-	docker container run -dt --name linenotify --mount type=bind,source=/Share_DockerToolbox/LINE_Notify,target=/nodejs \
-	labdocker/alpine:latest sh
+
+	*For MAC OS X*:
+	cd ~/dockerworkshop/Workshop-1-7-Volume/LINE_Notify/
+	pwd	==> check <absolute path>
+	docker container run -dt --name linenotify --mount type=bind,source=<absolute path>,target=/nodejs labdocker/alpine:latest sh
+
+	*For Windows*:
+	cd d:\dockerworkshop\Workshop-1-7-Volume\LINE_Notify\
+	docker container run -dt --name linenotify --mount type=bind,source=d:\dockerworkshop\Workshop-1-7-Volume\LINE_Notify\,target=/nodejs labdocker/alpine:latest sh  
 
 4. Attach to container by command: docker container exec -it linenotify sh
 5. Update component by command:
 	apk update
 
 6. Install required module by command:
-	apk add nodejs curl vim bash
+	apk add nodejs nodejs-npm curl vim bash
 
 7. Set environment for make code operate by command:
 	export NODE_VERSION=v4.3.0 
@@ -64,38 +77,40 @@ Part 2: Container Volume
 
 2. Create web container (web1) by attach volume with command:
 
-	docker container run -dt --name web1 \
-	--mount source=datavol,target=/data \
-	labdocker/alpine sh
+	docker container run -dt --name web1 --mount source=datavol,target=/data labdocker/alpine sh
 
 3. Shell to container web1 and touch file on /data
 
 	docker container exec -it web1 sh
 	touch /data/test_web1
+	exit
 
 4. Create web container (web2) by attach volume with command:
 
-	docker container run -dt --name web2 \
-	--mount source=datavol,target=/data \
-	labdocker/alpine sh
+	docker container run -dt --name web2 --mount source=datavol,target=/data labdocker/alpine sh
 
 5. Shell to container web2 and touch file on /data
 
 	docker container exec -it web2 sh
 	touch /data/test_web2
+	exit
 
 6. Create backup for volume /data by run container with command:
+
 	docker container run --rm --mount source=datavol,target=/data \
 	--mount type=bind,source=$(pwd),target=/backup \
 	labdocker/ubuntu:latest tar cvf /backup/vol001.tar /data
 
+	*For Windows*
+	docker container run --rm --mount source=datavol,target=/data --mount type=bind,source=d:\dockerworkshop\Workshop-1-7-Volume\LINE_Notify\,target=/backup labdocker/ubuntu:latest tar cvf /backup/vol001.tar /data
 
-7. We will see backup file (vol001.tar) on /home/docker
+7. We will see backup file (vol001.tar)
 
 8. Shell to any container to delete file
 
 	docker container exec -it web1 sh
 	rm /data/*
+	exit
 
 9. Restore backup for volume /data by run container with command:
 
@@ -103,10 +118,14 @@ Part 2: Container Volume
 	--mount type=bind,source=$(pwd),target=/backup  \
 	labdocker/ubuntu:latest bash -c "cd /data && tar xvf /backup/vol001.tar --strip 1"
 
+	*For Windows*
+	docker container run --rm --mount source=datavol,target=/data --mount type=bind,source=d:\dockerworkshop\Workshop-1-7-Volume\LINE_Notify\,target=/backup labdocker/ubuntu:latest bash -c "cd /data && tar xvf /backup/vol001.tar --strip 1"
+
 10. Check on any container for check file
 
 	docker container exec -it web1 sh
 	ls -lh /data
+	exit
 
 11. Cleanup lab
 
